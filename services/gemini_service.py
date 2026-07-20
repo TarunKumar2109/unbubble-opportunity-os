@@ -74,7 +74,6 @@ Use exactly this schema:
 def extract_opportunity(text: str):
 
     try:
-
         response = client.models.generate_content(
             model=MODEL_NAME,
             contents=[
@@ -83,39 +82,17 @@ def extract_opportunity(text: str):
             ]
         )
 
-        if not response.text:
-            return {
-                "error": True,
-                "message": "Gemini returned an empty response."
-            }
-
         output = response.text.strip()
 
         try:
             return json.loads(output)
 
         except json.JSONDecodeError:
-
             return {
                 "error": True,
-                "message": "Gemini returned invalid JSON.",
                 "raw_response": output
             }
 
-    except errors.ClientError as e:
-
-        st.error(f"Gemini API Error:\n\n{e}")
-
-        return {
-            "error": True,
-            "message": str(e)
-        }
-
     except Exception as e:
-
-        st.error(f"Unexpected Error:\n\n{e}")
-
-        return {
-            "error": True,
-            "message": str(e)
-        }
+        st.exception(e)
+        raise
