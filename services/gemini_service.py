@@ -2,6 +2,7 @@ import json
 import os
 
 import streamlit as st
+st.error("RUNNING GEMINI_SERVICE VERSION 8a528ce")
 from dotenv import load_dotenv
 from google import genai
 
