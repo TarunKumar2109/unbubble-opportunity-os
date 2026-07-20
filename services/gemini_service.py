@@ -73,39 +73,34 @@ Use exactly this schema:
 
 def extract_opportunity(text: str):
 
-    last_error = None
+    st.write("🚀 Gemini function called")
+
+    st.write("Available models:", MODELS)
 
     for model in MODELS:
+
+        st.write(f"Trying model: {model}")
 
         try:
 
             response = client.models.generate_content(
                 model=model,
-                contents=[
-                    SYSTEM_PROMPT,
-                    text
-                ]
+                contents=[SYSTEM_PROMPT, text]
             )
+
+            st.success(f"✅ Success using {model}")
 
             output = response.text.strip()
 
             return json.loads(output)
 
-        except json.JSONDecodeError:
-
-            return {
-                "error": True,
-                "raw_response": output
-            }
-
         except Exception as e:
 
-            last_error = e
-            continue
+            st.error(f"❌ {model} failed")
 
-    st.exception(last_error)
+            st.exception(e)
 
     return {
         "error": True,
-        "raw_response": str(last_error)
+        "raw_response": "All Gemini models failed."
     }
